@@ -75,7 +75,7 @@ def main():
 	trainY_o = temp2[0:le]
 	print('Playing noisy data')
 	print(measure_snr(trainX_o,trainY_o))
-	#play_file(trainX_o, Fs)
+	
 	print('Playing actual data')
 	#play_file(trainY_o, Fs)
 	trainX, trainY = data_preprocessing(trainX_o, trainY_o)
@@ -85,7 +85,7 @@ def main():
 	model.add(LSTM(8, input_shape=(tap, 1)))
 	model.add(Dense(tap))
 	model.compile(loss='mean_squared_error', optimizer='adam')
-	hist = model.fit(trainX, trainY, epochs=5, batch_size=1000, verbose=2)
+	hist = model.fit(trainX, trainY, epochs=10, batch_size=1000, verbose=2)
 	loss = list(hist.history['loss'])
 	plt.plot(loss)
 	plt.show()
@@ -95,9 +95,10 @@ def main():
 	temp2 = a_yhat[:,tap-1].tolist()
 	predict = temp1 + temp2
 	predict = np.array(predict)
+	play_file(trainX_o, Fs)
 	print('Output of neural network')
 	print(measure_snr(predict,trainY_o))
-	#play_file(predict,Fs)
+	play_file(predict,Fs)
 	save_file('output_training_data_50.wav',predict,Fs)
 
 	temp1, Fs = get_data('aircraft027.wav')
