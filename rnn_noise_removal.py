@@ -10,6 +10,14 @@ import matplotlib.pyplot as plt
 import time
 
 tap = 16
+epoch = 5
+
+def input_from_history(data, n):
+	y = np.size(data)-n
+	ret = np.zeros([y,n])
+	for i in range(y):
+		ret[i,:] = data[i:i+n]
+	return ret
 
 def read_wav(FILE_NAME):
     data,samplerate = sf.read(FILE_NAME)
@@ -42,8 +50,8 @@ def get_data(filename):
 def data_preprocessing(trainX, trainY):
 	trainX = trainX/np.amax(trainX)
 	trainY = trainY/np.amax(trainY)
-	trainX_use = pd.input_from_history(trainX,tap)
-	trainY_use = pd.input_from_history(trainY,tap)
+	trainX_use = input_from_history(trainX,tap)
+	trainY_use = input_from_history(trainY,tap)
 	trainX_use = trainX_use.reshape((trainX_use.shape[0],tap,1))
 	trainY_use = trainY_use.reshape((trainY_use.shape[0],tap))
 	return trainX_use, trainY_use
@@ -60,8 +68,8 @@ def play_file(data,Fs):
 
 def measure_snr(noisy, data):
 	noise = noisy - data
-	pwr_noise = (np.max(noise)**2)/noise.size
-	pwr_data = (np.max(data)**2)/data.size
+	pwr_noise = (np.sum(np.abs(noise)**2))/noise.size
+	pwr_data = (np.sum(np.abs(data)**2))/data.size
 	snr = pwr_data/pwr_noise
 	return snr
 
@@ -75,24 +83,23 @@ def main():
 	trainY_o = temp2[0:le]
 	print('Playing noisy data')
 	print(measure_snr(trainX_o,trainY_o))
-	
 	print('Playing actual data')
 	#play_file(trainY_o, Fs)
 	trainX, trainY = data_preprocessing(trainX_o, trainY_o)
 	print(trainX.shape, trainY.shape)
 	#Neural Network Model
-	model = Sequential()
+	model = Sequntial()
 	model.add(LSTM(8, input_shape=(tap, 1)))
 	model.add(Dense(tap))
 	model.compile(loss='mean_squared_error', optimizer='adam')
-	hist = model.fit(trainX, trainY, epochs=10, batch_size=1000, verbose=2)
-	loss = list(hist.history['loss'])
-	plt.plot(loss)
-	plt.show()
-	yhat = model.predict(trainX, batch_size = 1000, verbose = 0)
-	a_yhat = yhat*(np.amax(trainY_o/np.amax(trainY_o))/np.amax(yhat))*np.amax(trainY_o)
-	temp1 = a_yhat[0,0:-1].tolist()
-	temp2 = a_yhat[:,tap-1].tolist()
+	for i in range(epoch):
+		hist = model.fit(trainX, trainY, epochs=1, batch_size=1000, verbose=2)
+		yhat = model.predict(trainX, batch_size = 1000, verbose = 0)
+	#loss = list(hist.history['loss'])
+	#plt.plot(loss)
+	#plt.show()
+	temp1 = yhat[0,0:-1].tolist()
+	temp2 = yhat[:,tap-1].tolist()
 	predict = temp1 + temp2
 	predict = np.array(predict)
 	play_file(trainX_o, Fs)

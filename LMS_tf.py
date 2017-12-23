@@ -8,7 +8,7 @@ mu = 0.01
 e = 0.05
 tap = 16
 batch_size = 1000
-epoch = 100
+epoch = 1000
 
 def input_from_history(data, n):
 	y = np.size(data)-n
@@ -47,8 +47,8 @@ def play_file(data,Fs):
 
 def measure_snr(noisy, data):
 	noise = noisy - data
-	pwr_noise = (np.max(noise)**2)/noise.size
-	pwr_data = (np.max(data)**2)/data.size
+	pwr_noise = (np.sum(np.abs(noise)**2))/noise.size
+	pwr_data = (np.sum(np.abs(data)**2))/data.size
 	snr = pwr_data/pwr_noise
 	return snr
 
@@ -93,8 +93,8 @@ def main():
 				sess.run(opt, feed_dict = {X:batch_X, Y:batch_Y})
 				av_cost += sess.run(err, feed_dict = {X:batch_X, Y:batch_Y})
 			yout = sess.run(yhat, feed_dict = {X:trainX})
-			print('Epoch:',(j), 'Sq. Error:', av_cost)
 			snr = measure_snr(yout,trainY_o[tap-1:-1].reshape([yout.size,1]))
+			print('Epoch:',j, 'Sq. Error:', av_cost,'SNR:',snr)
 			if(pre_snr > snr):
 				break
 			pre_snr = snr
