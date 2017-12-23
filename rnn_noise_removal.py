@@ -1,8 +1,6 @@
 import numpy as np
 import soundfile as sf
 import sounddevice as sd 
-import noise_gen as ng 
-import padasip as pd 
 from scipy.signal import butter,lfilter,freqs
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
@@ -99,7 +97,7 @@ def main():
 		yhat = model.predict(trainX, batch_size = 1000, verbose = 0)
 		snr = measure_snr(yhat[:,tap-1].reshape([yhat.shape[0],1]),trainY_o[tap-1:-1].reshape([trainY_o.size-tap,1]))
 		snr_plt.append(snr)
-		print('Epoch:',i+1,'loss:',hist.history['loss'],'SNR:',snr)
+		print('Epoch:',i+1,'loss:',hist.history['loss'],'SNR:',snrgit add )
 	end = time.time()
 	print('Time taken',(end-strt))
 	plt.plot(snr_plt)
