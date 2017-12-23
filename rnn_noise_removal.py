@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import time
 
 tap = 16
-epoch = 5
+epoch = 10
 
 def input_from_history(data, n):
 	y = np.size(data)-n
@@ -71,7 +71,7 @@ def measure_snr(noisy, data):
 	pwr_noise = (np.sum(np.abs(noise)**2))/noise.size
 	pwr_data = (np.sum(np.abs(data)**2))/data.size
 	snr = pwr_data/pwr_noise
-	return snr
+	return 10*np.log10(snr)
 
 def main():
 	#data preprocessing step
@@ -88,24 +88,27 @@ def main():
 	trainX, trainY = data_preprocessing(trainX_o, trainY_o)
 	print(trainX.shape, trainY.shape)
 	#Neural Network Model
-	model = Sequntial()
+	model = Sequential()
 	model.add(LSTM(8, input_shape=(tap, 1)))
 	model.add(Dense(tap))
 	model.compile(loss='mean_squared_error', optimizer='adam')
+	snr_plt = []
+	strt = time.time()
 	for i in range(epoch):
-		hist = model.fit(trainX, trainY, epochs=1, batch_size=1000, verbose=2)
+		hist = model.fit(trainX, trainY, epochs=1, batch_size=1000, verbose=0)
 		yhat = model.predict(trainX, batch_size = 1000, verbose = 0)
-	#loss = list(hist.history['loss'])
-	#plt.plot(loss)
-	#plt.show()
-	temp1 = yhat[0,0:-1].tolist()
-	temp2 = yhat[:,tap-1].tolist()
-	predict = temp1 + temp2
-	predict = np.array(predict)
-	play_file(trainX_o, Fs)
+		snr = measure_snr(yhat[:,tap-1].reshape([yhat.shape[0],1]),trainY_o[tap-1:-1].reshape([trainY_o.size-tap,1]))
+		snr_plt.append(snr)
+		print('Epoch:',i+1,'loss:',hist.history['loss'],'SNR:',snr)
+	end = time.time()
+	print('Time taken',(end-strt))
+	plt.plot(snr_plt)
+	plt.show()
+	predict = yhat[:,tap-1].reshape([yhat.shape[0],1])
+	#play_file(trainX_o, Fs)
 	print('Output of neural network')
-	print(measure_snr(predict,trainY_o))
-	play_file(predict,Fs)
+	print(measure_snr(predict,trainY_o[tap-1:-1].reshape([trainY_o.size-tap,1])))
+	#play_file(predict,Fs)
 	save_file('output_training_data_50.wav',predict,Fs)
 
 	temp1, Fs = get_data('aircraft027.wav')
@@ -120,13 +123,9 @@ def main():
 	#play_file(trainY_o, Fs)
 	trainX, trainY = data_preprocessing(trainX_o, trainY_o)
 	yhat = model.predict(trainX, batch_size = 1000, verbose = 0)
-	a_yhat = yhat*(np.amax(trainY_o/np.amax(trainY_o))/np.amax(yhat))*np.amax(trainY_o)
-	temp1 = a_yhat[0,0:-1].tolist()
-	temp2 = a_yhat[:,tap-1].tolist()
-	predict = temp1 + temp2
-	predict = np.array(predict)
+	predict = yhat[:,tap-1].reshape([yhat.shape[0],1])
 	print('Output of neural network')
-	print(measure_snr(predict,trainY_o))
+	print(measure_snr(predict,trainY_o[tap-1:-1].reshape([trainY_o.size-tap,1])))
 	#play_file(predict,Fs)
 	save_file('output_testing_data_50.wav',predict, Fs)
 

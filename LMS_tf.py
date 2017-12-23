@@ -3,6 +3,7 @@ import numpy as np
 import soundfile as sf
 import sounddevice as sd
 import time
+import matplotlib.pyplot as plt
 
 mu = 0.01
 e = 0.05
@@ -15,7 +16,6 @@ def input_from_history(data, n):
 	ret = np.zeros([y,n])
 	for i in range(y):
 		ret[i,:] = data[i:i+n]
-
 	return ret
 
 def read_wav(FILE_NAME):
@@ -50,7 +50,7 @@ def measure_snr(noisy, data):
 	pwr_noise = (np.sum(np.abs(noise)**2))/noise.size
 	pwr_data = (np.sum(np.abs(data)**2))/data.size
 	snr = pwr_data/pwr_noise
-	return snr
+	return 10*np.log10(snr)
 
 def main():
 	#data preprocessing step
@@ -85,6 +85,8 @@ def main():
 		sess.run(init_all)
 		j=0
 		av_cost = np.inf
+		strt = time.time()
+		snr_plt = []
 		for j in range(epoch):
 			av_cost = 0
 			for i in range(int(trainY.shape[0]/batch_size)):
@@ -94,14 +96,19 @@ def main():
 				av_cost += sess.run(err, feed_dict = {X:batch_X, Y:batch_Y})
 			yout = sess.run(yhat, feed_dict = {X:trainX})
 			snr = measure_snr(yout,trainY_o[tap-1:-1].reshape([yout.size,1]))
+			snr_plt.append(snr)
 			print('Epoch:',j, 'Sq. Error:', av_cost,'SNR:',snr)
 			if(pre_snr > snr):
 				break
 			pre_snr = snr
+		end = time.time()
+	print('Time taken',(end-strt))
 	print('noisy signal')
-	play_file(trainX_o,Fs)
+	#play_file(trainX_o,Fs)
 	print('after noise removal')
-	play_file(yout,Fs)
+	#play_file(yout,Fs)
+	plt.plot(snr_plt)
+	plt.show()
 main()
 #data = np.array([2,3,4,5,6,7,8,9])
 #print(input_from_history(data, 2))
