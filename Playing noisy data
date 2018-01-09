@@ -1,0 +1,34 @@
+Playing noisy data
+-3.35934495719
+Playing actual data
+(101914, 16, 1) (101914, 1)
+Epoch: 0 loss: [0.00733510580121002] SNR: 4.730810088
+Epoch: 24 loss: [0.0021456931889722647] SNR: 7.82397012036
+Time taken 58.122570753097534
+Output of neural network
+7.82397012036
+SECOND DATA:
+Playing noisy data
+-10.0490301159
+Playing actual data
+Output of neural network
+-1.65304265504
+
+
+LMS:
+Playing noisy data
+-3.35934495719
+Playing actual data
+(101914, 16) (101914, 1)
+Epoch: 0 Sq. Error: 0.123451056075 SNR: 0.569423866225
+Epoch: 24 Sq. Error: 0.0868828400853 SNR: 1.00192043448
+Time taken 6.400824308395386
+
+SECOND DATA:
+Playing noisy data
+-10.0490301159
+Playing actual data
+-4.86033195675
+
+
+

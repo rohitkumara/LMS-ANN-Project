@@ -1,4 +1,4 @@
-#generating PINK noise  
+#generating PINK & WHITE noise  
 
 import numpy as np 
 import matplotlib.pyplot as plt 
