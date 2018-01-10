@@ -10,7 +10,7 @@ mu = 0.01
 e = 0.05
 tap = 16
 batch_size = 1500
-epoch = 100
+epoch = 25
 
 def input_from_history(data, n):
 	y = np.size(data)-n
@@ -109,19 +109,20 @@ def main():
 		print('Epoch:',j, 'Sq. Error:', av_cost,'SNR:',snr)
 	end = time.time()
 	print('Time taken',(end-strt))
-	np.save('lms25.npy',snr_plt)
+	sav_file = 'lms{}.npy'.format(epoch)
+	np.save(sav_file,snr_plt)
 	fig, ax = plt.subplots()
 	ax.plot(snr_plt, linewidth=4.0)
 	start, end = ax.get_ylim()
 	ax.yaxis.set_ticks(np.arange(start, end, 0.5))
 	ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-	fig.suptitle('SNR vs Number of Iterations while training the LMS model', fontsize=20)
-	plt.ylabel('SNR (in dB)', fontsize=18)
-	plt.xlabel('Number of iterations', fontsize=18)
+	fig.suptitle('SNR vs Number of Iterations while training the LMS model', fontsize=26)
+	plt.ylabel('SNR (in dB)', fontsize=24)
+	plt.xlabel('Number of iterations', fontsize=24)
 	for tick in ax.xaxis.get_major_ticks():
-		tick.label.set_fontsize(14) 
+		tick.label.set_fontsize(20) 
 	for tick in ax.yaxis.get_major_ticks():
-		tick.label.set_fontsize(14) 
+		tick.label.set_fontsize(20) 
 	plt.show()
 	print('SNR of INPUT:', measure_snr(trainX_o,trainY_o))
 	#play_file(trainX_o,Fs)

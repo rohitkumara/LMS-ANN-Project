@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import time
 
-tap = 16
-epoch = 10
+tap = 32
+epoch = 25
 
 def input_from_history(data, n):
 	y = np.size(data)-n
@@ -87,7 +87,7 @@ def main():
 	init_snr = measure_snr(trainX_o,trainY_o)
 	#Neural Network Model
 	model = Sequential()
-	model.add(LSTM(1, input_shape=(tap, 1)))
+	model.add(LSTM(64, input_shape=(tap, 1)))
 	model.add(Dropout(0.5))
 	model.add(Dense(1))
 	opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
@@ -104,19 +104,20 @@ def main():
 		print('Epoch:',i+1,'loss:',hist.history['loss'],'SNR:',snr)
 	end = time.time()
 	print('Time taken',(end-strt))
-	np.save('rnn25.npy',snr_plt)
+	sav_file = 'rnn{}.npy'.format(epoch)
+	np.save(sav_file,snr_plt)
 	fig, ax = plt.subplots()
 	ax.plot(snr_plt, linewidth=4.0)
 	start, end = ax.get_ylim()
 	ax.yaxis.set_ticks(np.arange(start, end, 0.5))
 	ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-	fig.suptitle('SNR vs Number of Iterations while training the RNN model', fontsize=20)
-	plt.ylabel('SNR (in dB)', fontsize=18)
-	plt.xlabel('Number of iterations', fontsize=18)
+	fig.suptitle('SNR vs Number of Iterations while training the RNN model', fontsize=26)
+	plt.ylabel('SNR (in dB)', fontsize=24)
+	plt.xlabel('Number of iterations', fontsize=24)
 	for tick in ax.xaxis.get_major_ticks():
-		tick.label.set_fontsize(14) 
+		tick.label.set_fontsize(20) 
 	for tick in ax.yaxis.get_major_ticks():
-		tick.label.set_fontsize(14) 
+		tick.label.set_fontsize(20) 
 	plt.show()
 	predict = yhat.reshape([yhat.size,1])
 	#play_file(trainX_o, Fs)
