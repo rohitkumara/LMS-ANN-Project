@@ -1,0 +1,51 @@
+RNN Architectures:
+dropout = 0.5, epoch = 10:
+
+16, 16 dual layer(GRU followed by LSTM) --> 38sec per iteration, 
+Time taken 468.3584327697754
+SNR of INPUT data: -4.08143588220995
+SNR of OUTPUT data: -12.58290462590562
+Time Taken: 10.008217334747314
+SNR of INPUT: -3.994203538902622
+SNR of OUTPUT: -12.016714904041448
+
+-----------------------------------------------
+
+16, 16 dual layer (both LSTM) --> 43sec per iteration
+Time taken 524.0864083766937
+SNR of INPUT data: -4.08143588220995
+SNR of OUTPUT data: -13.640382798100784
+Time Taken: 10.875810623168945
+SNR of INPUT: -3.994203538902622
+SNR of OUTPUT: -13.107344235485902
+
+-----------------------------------------------
+
+16, 16 dual layer (both GRU) --> 33sec per iteration
+Time taken 403.3447639942169
+SNR of INPUT data: -4.08143588220995
+SNR of OUTPUT data: -13.020120993728684
+Time Taken: 8.96481704711914
+SNR of INPUT: -3.994203538902622
+SNR of OUTPUT: -12.495383749770635
+
+-----------------------------------------------
+
+16 single layer (LSTM) --> 16sec per iteration
+Time taken 214.6372001171112
+SNR of INPUT data: -4.08143588220995
+SNR of OUTPUT data: -12.842464586188054
+Time Taken: 5.963006019592285
+SNR of INPUT: -3.994203538902622
+SNR of OUTPUT: -12.11497786130941
+
+-------------------------------------------------
+
+16 single layer (GRU) --> 13sec per iteration
+Time taken 169.62372660636902
+SNR of INPUT data: -4.08143588220995
+SNR of OUTPUT data: -13.376393433751677
+(576287,) (576287,)
+Time Taken: 4.732649564743042
+SNR of INPUT: -3.994203538902622
+SNR of OUTPUT: -13.167678605910286
