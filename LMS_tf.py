@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker
 from pathlib import Path
 
 class LMSFilter:
-	def __init__(self, noise_fn, tap=32, epoch=10, p=0.9, lr=0.001, batch_size = 50, plot = False):
+	def __init__(self, noise_fn, tap=32, epoch=10, p=0.9, lr=0.001, batch_size = 10, plot = False):
 		self.noise_fn = noise_fn
 		self.tap = tap
 		self.epoch = epoch
