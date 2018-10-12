@@ -10,3 +10,7 @@ The python packages required to run this code are as follows:
 4. `Soundfile` - For reading the most common audio format files.
 5. `Sounddevice` - For audio recording and playback through code.
 
+Run the command `python3 call_lms.py` or `python3 call_RNN.py` to run the Least-Means-Squares or Recurrent-Neural-Network filter respectively.
+
+
+
