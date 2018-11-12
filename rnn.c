@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define FILTER_LENGTH   32
+
 void main(){
 	
 	int h_t_1[32] = {0};
@@ -16,8 +18,10 @@ void main(){
 }
 
 void gru_single_cell(int h_t_1[], int x_t[], int W_z[], int U_z[], int W_r[], int U_r[], int W[], int U[]){
-	// int z_t = sum_funct(hadamard(W_z, x_t), hadamard(U_z, h_t_1));
-
+	int W_z_x_t[] = hadamard(W_z, x_t);
+	int U_z_h_t_1[] = hadamard(U_z, h_t_1);
+	int sum_stage_1[] = sum_funct(W_z_x_t, U_z_h_t_1);
+	int z_t[] = sigma(sum_stage_1);	
 }
 
 int* hadamard(int first_array[], int second_array[]){
@@ -34,6 +38,10 @@ int* sum_funct(int first_array[], int second_array[]){
 		return_array[i] = first_array[i]+second_array[i];
 	}
 	return return_array;
+}
+
+int* sigma(int sum_stage_1[]){
+	return sum_stage_1;
 }
 
 
