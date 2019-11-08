@@ -15,6 +15,7 @@ The python packages required to run this code are as follows:
 Run the command `python3 call_lms.py` or `python3 call_RNN.py` to run the Least-Means-Squares or Recurrent-Neural-Network filter respectively.
 
 Authors -
+
 Rohitkumar Arasanipalai - f2015666p@alumni.bits-pilani.ac.in
 
 Aakriti Agrawal - f2015276p@alumni.bits-pilani.ac.in
